@@ -45,7 +45,7 @@ jobs:
 
       # 编译 Electron 主进程
       - name: Compile Electron main process
-        run: tsc -p main
+        run: pnpm tsc -p main
 
       # 打包应用
       - name: Build Electron App
