@@ -3,16 +3,15 @@ name: Build and Release Electron App
 on:
   push:
     tags:
-      - "v*"
+      - "v*" # 当推送 tag (v1.0.0) 时触发
 
 jobs:
   build:
     name: Build on ${{ matrix.os }}
-    continue-on-error: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest] # ✅ 去掉 Linux，减少问题
 
     steps:
       - name: Checkout repository
@@ -26,13 +25,18 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: pnpm install
+
+      - name: Install renderer dependencies
+        run: |
+          cd renderer
+          pnpm install
+          cd ..
 
       - name: Build renderer (React + Vite)
         run: |
           cd renderer
-          pnpm install
           pnpm build
           cd ..
 
@@ -41,7 +45,7 @@ jobs:
 
       - name: Build Electron App
         run: |
-          npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || (matrix.os == 'macos-latest' && 'mac' || 'linux') }} --publish always
+          npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || 'mac' }} --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
