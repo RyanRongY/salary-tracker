@@ -3,7 +3,7 @@ name: Build and Release Electron App
 on:
   push:
     tags:
-      - "v*" # 推送版本号标签时触发，例如 v1.0.0
+      - "v*" # 当推送 tag (v1.0.0) 时触发
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest] # 去掉 ubuntu，减少问题
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Checkout repository
@@ -25,30 +25,37 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      # 安装 root 依赖
       - name: Install root dependencies
         run: pnpm install
 
+      # ✅ 重点：安装 renderer 依赖
       - name: Install renderer dependencies
         run: |
           cd renderer
           pnpm install
+          cd ..
 
+      # 构建 renderer
       - name: Build renderer (React + Vite)
         run: |
           cd renderer
           pnpm build
           cd ..
 
+      # 编译 Electron 主进程
       - name: Compile Electron main process
         run: tsc -p main
 
+      # 打包应用
       - name: Build Electron App
         run: |
           npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || 'mac' }} --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Artifacts (for debugging)
+      # 上传构建产物
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
