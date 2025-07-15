@@ -3,7 +3,7 @@ name: Build and Release Electron App
 on:
   push:
     tags:
-      - "v*" # 当推送 tag (v1.0.0) 时触发
+      - "v*"
 
 jobs:
   build:
@@ -22,39 +22,35 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
 
-      # 安装 root 依赖
       - name: Install root dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
-      # ✅ 重点：安装 renderer 依赖
       - name: Install renderer dependencies
         run: |
           cd renderer
-          pnpm install
+          pnpm install --no-frozen-lockfile
           cd ..
 
-      # 构建 renderer
       - name: Build renderer (React + Vite)
         run: |
           cd renderer
           pnpm build
           cd ..
 
-      # 编译 Electron 主进程
       - name: Compile Electron main process
         run: pnpm tsc -p main
 
-      # 打包应用
       - name: Build Electron App
         run: |
           npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || 'mac' }} --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 上传构建产物
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
