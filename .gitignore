@@ -1,0 +1,10 @@
+# Node dependencies
+node_modules
+# Build outputs
+dist
+renderer/dist
+main/dist
+# Logs
+*.log
+# MacOS system files
+.DS_Store

@@ -1,0 +1,48 @@
+{
+  "name": "salary-tracker",
+  "version": "1.0.0",
+  "description": "Real-time Salary Tracker",
+  "main": "main/dist/main.js",
+  "scripts": {
+    "dev": "concurrently \"cd renderer && pnpm dev\" \"pnpm dev:electron\"",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
+    "build": "cd renderer && pnpm build && cd .. && tsc -p main && electron-builder"
+  },
+  "build": {
+    "appId": "com.salarytracker.app",
+    "productName": "仨瓜俩枣计算器",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main/dist/**/*",
+      "renderer/dist/**/*"
+    ],
+    "extraResources": [],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "artifactName": "${productName}.${ext}"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "${productName}${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "artifactName": "${productName}-${version}-linux.${ext}"
+    }
+  },
+  "devDependencies": {
+    "electron": "^29.4.6",
+    "electron-builder": "^24.13.3",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.8.3"
+  }
+}
