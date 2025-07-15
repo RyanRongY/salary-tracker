@@ -1,0 +1,51 @@
+name: Build and Release Electron App
+
+on:
+  push:
+    tags:
+      - "v*" # 当推送 tag (v1.0.0) 时触发
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build renderer (React + Vite)
+        run: |
+          cd renderer
+          pnpm install
+          pnpm build
+          cd ..
+
+      - name: Compile Electron main process
+        run: tsc -p main
+
+      - name: Build Electron App
+        run: |
+          npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || (matrix.os == 'macos-latest' && 'mac' || 'linux') }} --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts (for debugging)
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ matrix.os }}
+          path: dist/*
