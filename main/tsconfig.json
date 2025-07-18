@@ -2,9 +2,13 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "outDir": "./dist",
+    "outDir": "dist",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
-  "include": ["./*.ts"]
+  "include": ["*.ts", "*.tsx"], // ✅ 根目录的 TS 文件
+  "exclude": ["node_modules", "renderer", "dist"]
 }

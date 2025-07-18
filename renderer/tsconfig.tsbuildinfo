@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/types/canvas-confetti.d.ts"],"version":"5.8.3"}
+{"root":["./src/helper.tsx","./src/index.tsx","./src/router.tsx","./src/types.ts","./src/vite-env.d.ts","./src/pages/configpage.tsx","./src/pages/dashboard.tsx","./src/types/canvas-confetti.d.ts"],"version":"5.8.3"}
