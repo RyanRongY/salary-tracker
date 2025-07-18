@@ -142,7 +142,7 @@ const Dashboard: React.FC = () => {
     >
       {isWorking ? (
         <>
-          <Title level={4}>今日收入</Title>
+          <Title level={4}>仨瓜俩枣计算器</Title>
           <Title level={3} style={{ color: config.themeColor }}>
             {earnings.toFixed(2)} {config.currency}
           </Title>

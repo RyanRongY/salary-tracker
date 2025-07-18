@@ -37,7 +37,13 @@
         "AppImage"
       ],
       "artifactName": "${productName}-${version}-linux.${ext}"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "release"
+      }
+    ]
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

@@ -78,8 +78,8 @@ function openConfigWindow() {
 function createDockMenu() {
   if (process.platform === "darwin") {
     const dockMenu = Menu.buildFromTemplate([
-      { label: "Open Settings", click: openConfigWindow },
-      { label: "Quit", click: () => app.quit() },
+      { label: "设置", click: openConfigWindow },
+      { label: "退出", click: () => app.quit() },
     ]);
     app.dock.setMenu(dockMenu);
   }
@@ -91,7 +91,7 @@ function createTrayMenu() {
     tray = new Tray(iconPath);
 
     const trayMenu = Menu.buildFromTemplate([
-      { label: "Open Settings", click: openConfigWindow },
+      { label: "设置", click: openConfigWindow },
       {
         label: "Show App",
         click: () => {
