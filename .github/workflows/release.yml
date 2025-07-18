@@ -48,7 +48,6 @@ jobs:
 
       - name: Build Electron App
         run: |
-          rm -rf dist
           npx electron-builder ${{ matrix.args }} --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
